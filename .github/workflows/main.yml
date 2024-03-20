@@ -17,7 +17,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.3
+        dotnet-version: 3.1.x
  
     - name: Run file transformation script
       run: |
