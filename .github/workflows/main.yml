@@ -1,0 +1,24 @@
+name: File Transform
+ 
+on:
+  push:
+    branches:
+      - main
+ 
+jobs:
+  file_transform:
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+ 
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0
+ 
+    - name: Run file transformation script
+      run: |
+        dotnet tool install -g dotnet-config-transform
+        dotnet xdt transform -s Web.config -t Web.Development.config -o Web.config
