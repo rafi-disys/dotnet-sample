@@ -1,0 +1,36 @@
+name: File Transform
+ 
+on:
+  push:
+    branches:
+      - main  # Adjust this to your main branch name
+ 
+jobs:
+  transform:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'  # Adjust this to your .NET Core version
+      
+    - name: Install XML transformation tool
+      run: dotnet tool install -g Microsoft.Web.Xdt
+    
+    - name: Perform file transformation
+      run: xmllint --version && xml_transform --input 'Web.config' --transform 'Web.Release.config' --outputDir transformed_files
+      
+    - name: Commit changes
+      run: |
+        git config --global user.name 'Rafi'
+        git config --global user.email 'your_email@example.com'
+        git add transformed_files
+        git commit -m "Apply XML transformations"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git push
+      env:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
